@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\LeHotel.Application\LeHotel.Application.csproj" />
+    <ProjectReference Include="..\LeHotel.Contracts\LeHotel.Contracts.csproj" />
     <ProjectReference Include="..\LeHotel.Infrastructure\LeHotel.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

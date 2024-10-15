@@ -1,4 +1,5 @@
 using LeHotel.Infrastructure;
+using LeHotel.Application;
 
 namespace LeHotel.Api
 {
@@ -8,12 +9,10 @@ namespace LeHotel.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddInfrastructure();
+            builder.Services
+                .AddPresentation()
+                .AddAplication()
+                .AddInfrastructure();
 
             var app = builder.Build();
 
@@ -26,7 +25,6 @@ namespace LeHotel.Api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
