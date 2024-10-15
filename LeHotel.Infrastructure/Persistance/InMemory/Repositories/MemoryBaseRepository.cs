@@ -58,9 +58,9 @@ namespace LeHotel.Infrastructure.Persistance.InMemory.Repositories
             return _dataStore.GetAll(findOptions);
         }
 
-        public Task<IEnumerable<TEntity>> SkipAndTakeSpecific(int skip, int take, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null)
+        public async Task<IEnumerable<TEntity>> SkipAndTakeSpecific(int skip, int take, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null)
         {
-            throw new NotImplementedException();
+            return _dataStore.SkipAndTakeSpecific(skip, take, orderBy);
         }
 
         public async Task Update(TEntity entity)

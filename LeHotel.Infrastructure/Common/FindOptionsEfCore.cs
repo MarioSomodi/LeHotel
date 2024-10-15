@@ -1,4 +1,4 @@
-﻿namespace LeHotel.Domain.Common
+﻿namespace LeHotel.Infrastructure.Common
 {
     public enum FindOptionsEfCore
     {
