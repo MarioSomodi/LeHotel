@@ -6,4 +6,8 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LeHotel.Infrastructure\LeHotel.Infrastructure.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,3 +1,5 @@
+using LeHotel.Infrastructure;
+
 namespace LeHotel.Api
 {
     public class Program
@@ -10,6 +12,8 @@ namespace LeHotel.Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddInfrastructure();
 
             var app = builder.Build();
 
