@@ -69,10 +69,10 @@ namespace LeHotel.Infrastructure.DataStructures
 
             var allHotels = visitor.GetResults();
 
-            IEnumerable<HotelWithDistance> hotelsWithDistances = allHotels.Select(hotel => new HotelWithDistance(
-                    hotel, 
-                    userPoint.Distance(new Point(hotel.GeoLocation.Latitude, hotel.GeoLocation.Longitude))
-                )
+            IEnumerable<HotelWithDistance> hotelsWithDistances = allHotels.Select(hotel => new HotelWithDistance {
+                    Hotel = hotel,
+                    Distance = userPoint.Distance(new Point(hotel.GeoLocation.Latitude, hotel.GeoLocation.Longitude))
+                }
             );
 
             var sortedHotels = hotelsWithDistances

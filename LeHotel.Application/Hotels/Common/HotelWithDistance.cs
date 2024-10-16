@@ -2,5 +2,8 @@
 
 namespace LeHotel.Application.Hotels.Common
 {
-    public record HotelWithDistance(Hotel Hotel, double Distance );
+    public class HotelWithDistance {
+        public Hotel Hotel { get; set; }
+        public double Distance { get; set; }    
+    };
 }

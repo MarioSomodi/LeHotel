@@ -1,9 +1,9 @@
 ﻿using ErrorOr;
 using LeHotel.Application.Common;
+using LeHotel.Application.Hotels.Common;
 using LeHotel.Application.Hotels.Queries.SearchHotelsByGeoLocation;
 using LeHotel.Contracts.Common;
 using LeHotel.Contracts.Hotel;
-using LeHotel.Domain.HotelAggregate;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -23,16 +23,16 @@ namespace LeHotel.Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType<PagedResultResponse<HotelDto>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<PagedResultResponse<HotelWithDistanceDto>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Search(int page, int pageSize, double latitude, double longitude)
         {
             SearchHotelsByGeoLocationQuery searchHotelsByGeoLocationQuery = new SearchHotelsByGeoLocationQuery(page, pageSize, latitude, longitude);
 
-            ErrorOr<PagedResult<Hotel>> result = await _sender.Send(searchHotelsByGeoLocationQuery);
+            ErrorOr<PagedResult<HotelWithDistance>> result = await _sender.Send(searchHotelsByGeoLocationQuery);
 
             return result.Match(
-                result => Ok(_mapper.Map<PagedResultResponse<HotelDto>>(result)),
+                result => Ok(_mapper.Map<PagedResultResponse<HotelWithDistanceDto>>(result)),
                 errors => Problem(errors));
         }
     }
