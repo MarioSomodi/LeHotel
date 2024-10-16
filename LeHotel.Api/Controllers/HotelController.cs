@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using LeHotel.Application.Common;
+using LeHotel.Application.Hotels.Queries.GetHotelById;
 using LeHotel.Application.Hotels.Queries.GetHotels;
 using LeHotel.Application.Hotels.Queries.GetHotelsPerPage;
 using LeHotel.Contracts.Common;
@@ -24,7 +25,7 @@ namespace LeHotel.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{page}")]
+        [HttpGet("Page/{page}")]
         [ProducesResponseType<PagedResultResponse<HotelResponse>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(int page, int pageSize)
@@ -48,6 +49,21 @@ namespace LeHotel.Api.Controllers
 
             return result.Match(
                 result => Ok(result.ProjectToType<HotelResponse>()),
+                errors => Problem(errors));
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType<HotelResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSingle(string id)
+        {
+            GetHotelByIdQuery getHotelByIdQuery = new GetHotelByIdQuery(id);
+
+            ErrorOr<Hotel> result = await _sender.Send(getHotelByIdQuery);
+
+            return result.Match(
+                result => Ok(_mapper.Map<HotelResponse>(result)),
                 errors => Problem(errors));
         }
     }
