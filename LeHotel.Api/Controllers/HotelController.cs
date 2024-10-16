@@ -1,4 +1,5 @@
-﻿using LeHotel.Application.Common;
+﻿using ErrorOr;
+using LeHotel.Application.Common;
 using LeHotel.Application.Hotels.Queries.GetHotels;
 using LeHotel.Application.Hotels.Queries.GetHotelsPerPage;
 using LeHotel.Contracts.Common;
@@ -7,13 +8,12 @@ using LeHotel.Domain.HotelAggregate;
 using Mapster;
 using MapsterMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LeHotel.Api.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class HotelController : ControllerBase
+    public class HotelController : ApiController
     {
         private readonly ISender _sender;
         private readonly IMapper _mapper;
@@ -25,23 +25,30 @@ namespace LeHotel.Api.Controllers
         }
 
         [HttpGet("{page}")]
-        public async Task<ActionResult<PagedResult<HotelResponse>>> Get(int page, int pageSize)
+        [ProducesResponseType<PagedResultResponse<HotelResponse>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Get(int page, int pageSize)
         {
             GetHotelsPerPageQuery getHotelsPerPageQuery = new GetHotelsPerPageQuery(page, pageSize);
 
-            PagedResult<Hotel> result = await _sender.Send(getHotelsPerPageQuery);
+            ErrorOr<PagedResult<Hotel>> result = await _sender.Send(getHotelsPerPageQuery);
 
-            return Ok(_mapper.Map<PagedResultResponse<HotelResponse>>(result));
+            return result.Match(
+                result => Ok(_mapper.Map<PagedResultResponse<HotelResponse>>(result)),
+                errors => Problem(errors));
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<HotelResponse>>> Get()
+        [ProducesResponseType<IEnumerable<HotelResponse>>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Get()
         {
             GetHotelsQuery getHotelsQuery = new GetHotelsQuery();
 
-            IQueryable<Hotel> result = await _sender.Send(getHotelsQuery);
+            ErrorOr<IQueryable<Hotel>> result = await _sender.Send(getHotelsQuery);
 
-            return Ok(result.ProjectToType<HotelResponse>());
+            return result.Match(
+                result => Ok(result.ProjectToType<HotelResponse>()),
+                errors => Problem(errors));
         }
     }
 }

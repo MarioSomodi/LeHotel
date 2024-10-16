@@ -12,7 +12,8 @@ namespace LeHotel.Api
             builder.Services
                 .AddPresentation()
                 .AddAplication()
-                .AddInfrastructure();
+                .AddInfrastructure()
+                .AddProblemDetails();
 
             var app = builder.Build();
 
