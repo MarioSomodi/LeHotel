@@ -2,5 +2,5 @@
 
 namespace LeHotel.Contracts.Hotel
 {
-    public record HotelResponse(string Id, string Name, decimal Price, GeoLocationResponse GeoLocation);
+    public record HotelResponse(string Id, string Name, decimal Price, GeoLocationDto GeoLocation);
 }

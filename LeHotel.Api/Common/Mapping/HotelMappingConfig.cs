@@ -1,4 +1,5 @@
 ﻿using LeHotel.Application.Common;
+using LeHotel.Application.Hotels.Commands.CreateHotel;
 using LeHotel.Contracts.Common;
 using LeHotel.Contracts.Hotel;
 using LeHotel.Domain.HotelAggregate;
@@ -14,6 +15,8 @@ namespace LeHotel.Api.Common.Mapping
                  .Map(dest => dest.Id, src => src.Id.Value);
 
             config.NewConfig<PagedResult<Hotel>, PagedResultResponse<HotelResponse>>();
+
+            config.NewConfig<HotelPostRequest, CreateHotelCommand>();
         }
     }
 }

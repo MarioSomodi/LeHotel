@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using LeHotel.Application.Common;
+using LeHotel.Application.Hotels.Commands.CreateHotel;
 using LeHotel.Application.Hotels.Queries.GetHotelById;
 using LeHotel.Application.Hotels.Queries.GetHotels;
 using LeHotel.Application.Hotels.Queries.GetHotelsPerPage;
@@ -56,11 +57,25 @@ namespace LeHotel.Api.Controllers
         [ProducesResponseType<HotelResponse>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetSingle(string id)
+        public async Task<IActionResult> Get(string id)
         {
             GetHotelByIdQuery getHotelByIdQuery = new GetHotelByIdQuery(id);
 
             ErrorOr<Hotel> result = await _sender.Send(getHotelByIdQuery);
+
+            return result.Match(
+                result => Ok(_mapper.Map<HotelResponse>(result)),
+                errors => Problem(errors));
+        }
+
+        [HttpPost]
+        [ProducesResponseType<HotelResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Post(HotelPostRequest hotelPostRequest)
+        {
+            CreateHotelCommand createHotelCommand = _mapper.Map<CreateHotelCommand>(hotelPostRequest);
+
+            ErrorOr<Hotel> result = await _sender.Send(createHotelCommand);
 
             return result.Match(
                 result => Ok(_mapper.Map<HotelResponse>(result)),
