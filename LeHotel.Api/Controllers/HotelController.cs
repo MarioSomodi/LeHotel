@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using LeHotel.Application.Common;
 using LeHotel.Application.Hotels.Commands.CreateHotel;
+using LeHotel.Application.Hotels.Commands.DeleteHotel;
 using LeHotel.Application.Hotels.Commands.UpdateHotel;
 using LeHotel.Application.Hotels.Queries.GetHotelById;
 using LeHotel.Application.Hotels.Queries.GetHotels;
@@ -95,6 +96,21 @@ namespace LeHotel.Api.Controllers
 
             return result.Match(
                 result => Ok(_mapper.Map<HotelDto>(result)),
+                errors => Problem(errors));
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType<ResultResponse>(StatusCodes.Status204NoContent)]
+        [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(string id)
+        {
+            DeleteHotelCommand deleteHotelCommand = new DeleteHotelCommand(id);
+
+            ErrorOr<bool> result = await _sender.Send(deleteHotelCommand);
+
+            return result.Match(
+                result => StatusCode(StatusCodes.Status204NoContent),
                 errors => Problem(errors));
         }
     }
