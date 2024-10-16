@@ -8,7 +8,11 @@ namespace LeHotel.Api.Common.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<GeoLocation, GeoLocationResponse>();
+            config.NewConfig<GeoLocation, GeoLocationDto>();
+            config.ForType<GeoLocationDto, GeoLocation>()
+                .ConstructUsing(
+                    src => GeoLocation.Create(src.Latitude, src.Longitude)
+                );
         }
     }
 }
