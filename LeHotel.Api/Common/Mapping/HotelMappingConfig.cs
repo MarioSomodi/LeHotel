@@ -11,10 +11,10 @@ namespace LeHotel.Api.Common.Mapping
     {
         public void Register(TypeAdapterConfig config)
         {
-            config.NewConfig<Hotel, HotelResponse>()
+            config.NewConfig<Hotel, HotelDto>()
                  .Map(dest => dest.Id, src => src.Id.Value);
 
-            config.NewConfig<PagedResult<Hotel>, PagedResultResponse<HotelResponse>>();
+            config.NewConfig<PagedResult<Hotel>, PagedResultResponse<HotelDto>>();
 
             config.NewConfig<HotelPostRequest, CreateHotelCommand>();
         }

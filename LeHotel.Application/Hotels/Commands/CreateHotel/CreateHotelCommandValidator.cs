@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using LeHotel.Application.Common.CustomValidators;
 
 namespace LeHotel.Application.Hotels.Commands.CreateHotel
 {

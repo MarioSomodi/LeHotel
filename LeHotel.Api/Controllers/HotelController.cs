@@ -27,7 +27,7 @@ namespace LeHotel.Api.Controllers
         }
 
         [HttpGet("Page/{page}")]
-        [ProducesResponseType<PagedResultResponse<HotelResponse>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<PagedResultResponse<HotelDto>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(int page, int pageSize)
         {
@@ -36,12 +36,12 @@ namespace LeHotel.Api.Controllers
             ErrorOr<PagedResult<Hotel>> result = await _sender.Send(getHotelsPerPageQuery);
 
             return result.Match(
-                result => Ok(_mapper.Map<PagedResultResponse<HotelResponse>>(result)),
+                result => Ok(_mapper.Map<PagedResultResponse<HotelDto>>(result)),
                 errors => Problem(errors));
         }
 
         [HttpGet]
-        [ProducesResponseType<IEnumerable<HotelResponse>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<IEnumerable<HotelDto>>(StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
             GetHotelsQuery getHotelsQuery = new GetHotelsQuery();
@@ -49,12 +49,12 @@ namespace LeHotel.Api.Controllers
             ErrorOr<IQueryable<Hotel>> result = await _sender.Send(getHotelsQuery);
 
             return result.Match(
-                result => Ok(result.ProjectToType<HotelResponse>()),
+                result => Ok(result.ProjectToType<HotelDto>()),
                 errors => Problem(errors));
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType<HotelResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<HotelDto>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(string id)
@@ -64,12 +64,12 @@ namespace LeHotel.Api.Controllers
             ErrorOr<Hotel> result = await _sender.Send(getHotelByIdQuery);
 
             return result.Match(
-                result => Ok(_mapper.Map<HotelResponse>(result)),
+                result => Ok(_mapper.Map<HotelDto>(result)),
                 errors => Problem(errors));
         }
 
         [HttpPost]
-        [ProducesResponseType<HotelResponse>(StatusCodes.Status200OK)]
+        [ProducesResponseType<HotelDto>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(HotelPostRequest hotelPostRequest)
         {
@@ -78,7 +78,7 @@ namespace LeHotel.Api.Controllers
             ErrorOr<Hotel> result = await _sender.Send(createHotelCommand);
 
             return result.Match(
-                result => Ok(_mapper.Map<HotelResponse>(result)),
+                result => Ok(_mapper.Map<HotelDto>(result)),
                 errors => Problem(errors));
         }
     }
