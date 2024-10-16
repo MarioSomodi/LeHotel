@@ -4,16 +4,19 @@ using LeHotel.Domain.HotelAggregate;
 using LeHotel.Domain.HotelAggregate.ValueObjects;
 using MediatR;
 using LeHotel.Domain.Common.AppErrors;
+using LeHotel.Domain.HotelAggregate.Events;
 
 namespace LeHotel.Application.Hotels.Commands.UpdateHotel
 {
     public class UpdateHotelCommandHandler : IRequestHandler<UpdateHotelCommand, ErrorOr<Hotel>>
     {
         private readonly IHotelRepository _hotelRepository;
+        private readonly IPublisher _publisher;
 
-        public UpdateHotelCommandHandler(IHotelRepository hotelRepository)
+        public UpdateHotelCommandHandler(IHotelRepository hotelRepository, IPublisher publisher)
         {
             _hotelRepository = hotelRepository;
+            _publisher = publisher;
         }
 
         public async Task<ErrorOr<Hotel>> Handle(UpdateHotelCommand request, CancellationToken cancellationToken)
@@ -28,6 +31,8 @@ namespace LeHotel.Application.Hotels.Commands.UpdateHotel
             if(!hotel.GeoLocation.Equals(request.GeoLocation)) hotel.UpdateGeoLocation(request.GeoLocation);
 
             await _hotelRepository.Update(hotel);
+
+            await _publisher.Publish(new HotelUpdatedEvent(hotel));
 
             return hotel;
         }

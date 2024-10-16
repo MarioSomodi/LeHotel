@@ -4,16 +4,19 @@ using LeHotel.Domain.HotelAggregate.ValueObjects;
 using LeHotel.Domain.HotelAggregate;
 using MediatR;
 using LeHotel.Domain.Common.AppErrors;
+using LeHotel.Domain.HotelAggregate.Events;
 
 namespace LeHotel.Application.Hotels.Commands.DeleteHotel
 {
     public class DeleteHotelCommandHandler : IRequestHandler<DeleteHotelCommand, ErrorOr<bool>>
     {
         private readonly IHotelRepository _hotelRepository;
+        private readonly IPublisher _publisher;
 
-        public DeleteHotelCommandHandler(IHotelRepository hotelRepository)
+        public DeleteHotelCommandHandler(IHotelRepository hotelRepository, IPublisher publisher)
         {
             _hotelRepository = hotelRepository;
+            _publisher = publisher;
         }
 
         public async Task<ErrorOr<bool>> Handle(DeleteHotelCommand request, CancellationToken cancellationToken)
@@ -24,6 +27,8 @@ namespace LeHotel.Application.Hotels.Commands.DeleteHotel
             }
 
             await _hotelRepository.Delete(hotel);
+
+            await _publisher.Publish(new HotelDeletedEvent(hotel));
 
             return true;
         }

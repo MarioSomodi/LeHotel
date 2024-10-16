@@ -17,10 +17,10 @@ namespace LeHotel.Application.Hotels.Queries.GetHotelsPerPage
 
         public async Task<ErrorOr<PagedResult<Hotel>>> Handle(GetHotelsPerPageQuery request, CancellationToken cancellationToken)
         {
-            int postsToSkip = request.Page == 1 ? 0 : request.PageSize * request.Page - 1;
+            int hotelsToSkip = request.Page == 1 ? 0 : request.PageSize * request.Page - 1;
             int totalRecords = await _hotelRepository.Count(h => true);
 
-            IEnumerable<Hotel> hotels = await _hotelRepository.SkipAndTakeSpecific(postsToSkip, request.PageSize);
+            IEnumerable<Hotel> hotels = await _hotelRepository.SkipAndTakeSpecific(hotelsToSkip, request.PageSize);
 
             return new PagedResult<Hotel>(hotels, request.Page, request.PageSize, totalRecords);
         }
