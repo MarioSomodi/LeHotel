@@ -35,5 +35,14 @@ namespace LeHotel.Domain.HotelAggregate
         {
             GeoLocation = geoLocation;
         }
+
+        /// <summary>
+        /// Needed for instancing in ef core
+        /// </summary>
+#pragma warning disable CS8618
+        protected Hotel()
+        {
+        }
+#pragma warning restore CS8618
     }
 }
