@@ -100,7 +100,7 @@ namespace LeHotel.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType<ResultResponse>(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
         [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(string id)
