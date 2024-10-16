@@ -70,7 +70,7 @@ namespace LeHotel.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType<HotelDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType<HotelDto>(StatusCodes.Status201Created)]
         [ProducesResponseType<ValidationProblem>(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(HotelPostRequest hotelPostRequest)
         {
@@ -79,7 +79,7 @@ namespace LeHotel.Api.Controllers
             ErrorOr<Hotel> result = await _sender.Send(createHotelCommand);
 
             return result.Match(
-                result => Ok(_mapper.Map<HotelDto>(result)),
+                result => StatusCode(StatusCodes.Status201Created, _mapper.Map<HotelDto>(result)),
                 errors => Problem(errors));
         }
 
